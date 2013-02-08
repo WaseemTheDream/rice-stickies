@@ -1,0 +1,19 @@
+
+
+.container-narrow {
+    margin: 0 auto;
+    max-width: 312px;
+    margin-bottom: 40px;
+}
+
+.wow {
+    text-align: center;
+}
+
+.sticky {
+}
+
+#add-button {
+    margin-top: 10px;
+    float: right;
+}
