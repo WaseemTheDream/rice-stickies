@@ -23,7 +23,7 @@ jQuery(function() {
       url: '/stickies',
       type: 'POST',
       data: {
-        'json': JSON.stringify(postData)
+        'data': JSON.stringify(postData)
       },
       success: function(data) {
         var html, id, note, response, title;
@@ -46,7 +46,7 @@ deleteSticky = function(e) {
   sticky = $(this).parent();
   sticky_id = sticky.attr('data-id');
   return $.ajax({
-    url: '/delete',
+    url: '/stickies/delete',
     type: 'POST',
     data: {
       'id': sticky_id

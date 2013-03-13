@@ -1,0 +1,31 @@
+<div class="container-narrow">
+  <div id="stickies">
+    {% for sticky in stickies %}
+      <div class="alert" data-id="{{ sticky.id }}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4>{{ sticky.title }}</h4>
+        <p>{{ sticky.note }}</p>
+      </div>
+    {% endfor %}
+  </div>
+  
+  <form class="form-horizontal well container-narrow">
+    <fieldset>
+      <legend>Add Sticky</legend>
+        <label>Title</label>
+        <input id="input-title" type="text" class="span3">
+        <label>Note</label>
+        <textarea id="input-text" class="span3 sticky" rows="5" placeholder="Type something..."></textarea>
+      <button id="add-button" class="btn btn-primary">Add</button>
+    </fieldset>
+  </form>
+
+  <div class='wow'>
+    <div class="jumbotron">
+      <h1>Leaving?</h1>
+      <div class="lead">Come back soon!</div>
+      <a class="btn btn-large btn-success" href="/authenticate/logout?destination=home">Sign Out</a>
+    </div>
+  </div>
+</div> <!-- /container -->
+<script src="/static/js/stickies.js"></script>

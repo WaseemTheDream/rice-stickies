@@ -15,7 +15,7 @@ jQuery ->
         $.ajax
             url: '/stickies'
             type: 'POST'
-            data: 'json': JSON.stringify(postData)
+            data: 'data': JSON.stringify(postData)
             success: (data) ->
                 response = JSON.parse(data)
                 id = response['id']
@@ -38,7 +38,7 @@ deleteSticky = (e) ->
     sticky = $(this).parent()
     sticky_id = sticky.attr('data-id')
     $.ajax
-        url: '/delete'
+        url: '/stickies/delete'
         type: 'POST'
         data: 'id': sticky_id
         success: (data) ->

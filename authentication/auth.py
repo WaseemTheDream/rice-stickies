@@ -6,6 +6,7 @@ __author__ = 'Waseem Ahmad <waseem@rice.edu>'
 
 
 import logging
+import models.user
 import re
 import urllib
 import webapp2
@@ -37,6 +38,9 @@ class LoginResponseHandler(webapp2.RequestHandler):
 
         # Start a session for the user
         session['net_id'] = net_id
+
+        # Create an account for the user if one doesn't exist
+        models.user.get_user(net_id, create=True)
 
         destination_url = str(self.request.get('destination'))
         if not destination_url:
@@ -124,11 +128,10 @@ class LogoutHandler(webapp2.RequestHandler):
 class LogoutResponseHandler(webapp2.RequestHandler):
     def get(self):
         """Logs out the user."""
-        self.response.out.write('You\'ve been logged out. See you again soon!')
-        
+        self.response.out.write('You\'ve been logged out. See you again soon!')   
 
 
-def require_login(request_handler):
+def redirect_to_login(request_handler):
     """
     Requires the user to be logged in through NetID authentication.
 
@@ -140,6 +143,36 @@ def require_login(request_handler):
     service_url = 'http://%s/authenticate/login-response' % app_url
     cas_url = CAS_SERVER + '/cas/login?service=' + service_url + '?destination=' + destination_url
     request_handler.redirect(cas_url, abort=True)
+
+
+def get_logged_in_user():
+    """
+    Gets the logged in user.
+
+    Returns:
+        user: the user if logged in, None otherwise.
+    """
+    session = get_current_session()
+    if session.has_key('net_id'):
+        return models.user.get_user(session['net_id'])
+    return None
+
+
+def require_login(request_handler):
+    """
+    Requires the user to be logged in through NetID authentication.
+    NOTE: Only works for non-AJAX GET requests.
+
+    Args:
+        request_handler: webapp2 request handler of the user request
+
+    Returns:
+        user: the database user object of the user logged in
+    """
+    user = get_logged_in_user()
+    if not user:
+        return redirect_to_login(request_handler)
+    return user
 
 app = webapp2.WSGIApplication([
     ('/authenticate/login-response', LoginResponseHandler),

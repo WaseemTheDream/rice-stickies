@@ -28,26 +28,8 @@ from authentication.gaesessions import get_current_session
 JINJA_ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
-class User(db.Model):
-    net_id = db.StringProperty(required=True)
 
-class Sticky(db.Model):
-    user = db.ReferenceProperty(User,
-                                required=True)
-    time_added = db.DateTimeProperty(auto_now=True)
-    title = db.StringProperty(required=True)
-    note = db.TextProperty()
 
-def get_user(net_id, create=False):
-    user = User.gql('WHERE net_id=:1', net_id).get()
-    if not user and create:
-        user = User(net_id=net_id).put()
-    return user
-
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        template = JINJA_ENV.get_template('main.html')
-        self.response.out.write(template.render())
 
 class StickyNotesHandler(webapp2.RequestHandler):
     def get(self):
@@ -97,10 +79,3 @@ class GarbageHandler(webapp2.RequestHandler):
         assert sticky.user.key() == user.key()
         sticky.delete()
         self.response.out.write('Success!')
-
-
-app = webapp2.WSGIApplication([
-    ('/stickies', StickyNotesHandler),
-    ('/delete', GarbageHandler),
-    ('/.*', MainHandler)
-], debug=True)
